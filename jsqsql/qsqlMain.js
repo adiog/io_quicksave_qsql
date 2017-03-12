@@ -2,7 +2,7 @@
 // Copyright (c) 2017 Aleksander Gajewski <adiog@quicksave.io>.
 
 var antlr4 = require('../lib/antlr4/index');
-var qsql = require('../js_generated/index');
+var qsql = require('./generated/index');
 
 window.is_qsql_query_valid = function(query)
 {
