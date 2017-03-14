@@ -50,3 +50,5 @@ generate_parser
 post_generation
 generate_index
 install
+cleanup
+
