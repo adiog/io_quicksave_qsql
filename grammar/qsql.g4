@@ -32,12 +32,12 @@ par_predicate
 ;
 
 qs_predicate
- : qs_has_predicate
+ : qs_tag_predicate
  | qs_string_predicate
 ;
 
-qs_has_predicate
- : K_HAS qs_string
+qs_tag_predicate
+ : K_TAG qs_string
 ;
 
 qs_string_predicate
@@ -61,20 +61,46 @@ qs_string_match_predicate
 qs_string_with_parenthesis
  : '(' qs_string ')'
 ;
+
 qs_string
  : qs_string_with_parenthesis
- | qs_get_item_freetext
+ | qs_get_item_name
+ | qs_get_item_text
+ | qs_get_item_type
+ | qs_get_item_author
+ | qs_get_item_source_title
+ | qs_get_item_source_url
  | qs_get_tag_value
  | qs_identifier
 ;
 
-qs_get_item_freetext
- : K_FREETEXT
+qs_get_item_name
+ : K_NAME
+;
+
+qs_get_item_text
+ : K_TEXT
+;
+
+qs_get_item_type
+ : K_TYPE
+;
+
+qs_get_item_author
+ : K_AUTHOR
+;
+
+qs_get_item_source_title
+ : K_SOURCE
+;
+
+qs_get_item_source_url
+ : K_URL
 ;
 
 qs_get_tag_value
- : K_TAG qs_string
- | K_TAG '(' qs_string ')'
+ : K_GET qs_string
+ | K_GET '(' qs_string ')'
 ;
 
 qs_identifier
@@ -89,9 +115,14 @@ IDENTIFIER
 
 EQUAL : '=';
 K_IN : I N;
-K_MATCH : M A T C H;
-K_FREETEXT : 'freetext';
-K_HAS : H A S;
+K_MATCH : '~';
+K_NAME : N A M E;
+K_TEXT : T E X T;
+K_TYPE : T Y P E;
+K_AUTHOR : A U T H O R;
+K_SOURCE : S O U R C E;
+K_URL : U R L;
+K_GET : G E T;
 K_TAG : T A G;
 K_NOT : N O T;
 K_AND : A N D;

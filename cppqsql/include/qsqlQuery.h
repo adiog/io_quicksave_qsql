@@ -11,19 +11,31 @@
 #include <ANTLRInputStream.h>
 #include "tree/ParseTree.h"
 
+class QsqlException : public std::runtime_error
+{
+    using std::runtime_error::runtime_error;
+};
+
 struct QsqlQuery {
     static std::string parseQsql2Sql(std::string qsqlQuery)
     {
-        std::stringstream stream(qsqlQuery);
-        antlr4::ANTLRInputStream input(stream);
-        qsqlLexer lexer(&input);
-        antlr4::CommonTokenStream tokens(&lexer);
-        qsqlParser parser(&tokens);
+        try
+        {
+            std::stringstream stream(qsqlQuery);
+            antlr4::ANTLRInputStream input(stream);
+            qsqlLexer lexer(&input);
+            antlr4::CommonTokenStream tokens(&lexer);
+            qsqlParser parser(&tokens);
 
-        auto tree = parser.start();
-        auto qsqlVisitor = qsqlQuicksaveVisitor();
-        auto a = static_cast<AstNode*>(qsqlVisitor.visitStart(tree));
-        return a->buildQuery().first;
+            auto tree = parser.start();
+            auto qsqlVisitor = qsqlQuicksaveVisitor();
+            auto a = static_cast<AstNode *>(qsqlVisitor.visitStart(tree));
+            return a->buildQuery().first;
+        }
+        catch (...)
+        {
+            throw QsqlException("");
+        }
     }
 };
 

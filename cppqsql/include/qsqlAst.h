@@ -2,12 +2,14 @@
 // Copyright (c) 2017 Aleksander Gajewski <adiog@quicksave.io>.
 
 
-//class QsqlDoNotDisplayException(Exception):
 #include <antlr4-runtime.h>
 #include <qsql/qsqlVisitor.h>
 #include <util/format.h>
+
+
 using SQL = std::pair<std::string, std::unordered_map<std::string, std::string>>;
 using CTX = antlr4::ParserRuleContext;
+
 
 struct AstNode
 {
@@ -16,18 +18,13 @@ struct AstNode
 
 using AstNodePtr = antlrcpp::Any; //std::unique_ptr<AstNode>;
 
-//class QsqlDoNotDisplayException(Exception):
-//pass
+
 #define GETSQL(node) static_cast<AstNode*>(node)->buildQuery()
 #define FORMAT(...) Format::format(__VA_ARGS__)
 std::string get_hash(std::string str)
 {
     return str;
 }
-
-//        def get_sha(content):
-//return sha1(content.encode('utf-8')).hexdigest()
-
 
 
 struct NullaryAstNode : public AstNode
@@ -58,6 +55,7 @@ struct BinaryAstNode : public AstNode
     AstNodePtr lhsAstNode;
     AstNodePtr rhsAstNode;
 };
+
 
 struct AstStart : public UnaryAstNode
 {
@@ -110,6 +108,7 @@ struct AstOrPredicate : public BinaryAstNode
         return {sqlQuery, sqlParams};
     }
 };
+
 
 struct AstAndPredicate : public BinaryAstNode
 {
@@ -164,7 +163,8 @@ struct AstQsPredicate : public UnaryAstNode
     }
 };
 
-struct AstQsHasPredicate : public UnaryAstNode
+
+struct AstQsTagPredicate : public UnaryAstNode
 {
     using UnaryAstNode::UnaryAstNode;
 
@@ -249,6 +249,7 @@ struct AstQsStringWithParenthesis : public UnaryAstNode
     }
 };
 
+
 struct AstQsString : public UnaryAstNode
 {
     using UnaryAstNode::UnaryAstNode;
@@ -259,7 +260,19 @@ struct AstQsString : public UnaryAstNode
     }
 };
 
-struct AstQsGetItemFreetext : public NullaryAstNode
+
+struct AstQsGetItemName : public NullaryAstNode
+{
+    using NullaryAstNode::NullaryAstNode;
+
+    SQL buildQuery()
+    {
+        return {"meta.name", {}};
+    }
+};
+
+
+struct AstQsGetItemText : public NullaryAstNode
 {
     using NullaryAstNode::NullaryAstNode;
 
@@ -268,6 +281,51 @@ struct AstQsGetItemFreetext : public NullaryAstNode
         return {"meta.text", {}};
     }
 };
+
+
+struct AstQsGetItemType : public NullaryAstNode
+{
+    using NullaryAstNode::NullaryAstNode;
+
+    SQL buildQuery()
+    {
+        return {"meta.type", {}};
+    }
+};
+
+
+struct AstQsGetItemAuthor : public NullaryAstNode
+{
+    using NullaryAstNode::NullaryAstNode;
+
+    SQL buildQuery()
+    {
+        return {"meta.author", {}};
+    }
+};
+
+
+struct AstQsGetItemSourceTitle : public NullaryAstNode
+{
+    using NullaryAstNode::NullaryAstNode;
+
+    SQL buildQuery()
+    {
+        return {"meta.source_title", {}};
+    }
+};
+
+
+struct AstQsGetItemSourceUrl : public NullaryAstNode
+{
+    using NullaryAstNode::NullaryAstNode;
+
+    SQL buildQuery()
+    {
+        return {"meta.source_url", {}};
+    }
+};
+
 
 struct AstQsGetTagValue : public UnaryAstNode
 {
