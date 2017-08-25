@@ -33,7 +33,7 @@ struct NullaryAstNode : public AstNode
     {
     }
 
-    CTX ctx;
+    CTX& ctx;
 };
 
 
