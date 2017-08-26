@@ -21,6 +21,7 @@ function generate_parser()
 function fix_antlr()
 {
     sed -e "s#class  qsqlLexer : public antlr4::Lexer {#&\npublic:\nstd::vector<std::string> vs;\nvirtual const std::vector<std::string>\& getChannelNames() const override {\n       return vs;\n    };#" -i generated/qsql/qsqlLexer.h
+    sed -e "s#antlr4-runtime.h#antlr4-runtime/&#" -i generated/qsql/qsqlLexer.h
 }
 
 function install()
