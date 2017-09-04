@@ -17,7 +17,7 @@ class QsqlException : public std::runtime_error
 };
 
 struct QsqlQuery {
-    static std::string parseQsql2Sql(std::string qsqlQuery)
+    static std::string parseQsqlToSql(std::string user_hash, std::string qsqlQuery)
     {
         try
         {
@@ -29,8 +29,8 @@ struct QsqlQuery {
 
             auto tree = parser.start();
             auto qsqlVisitor = qsqlQuicksaveVisitor();
-            auto a = static_cast<AstNode *>(qsqlVisitor.visitStart(tree));
-            return a->buildQuery().first;
+            auto anyNode = qsqlVisitor.visitStart(tree);
+            return FORMAT("SELECT * FROM meta WHERE ((user_hash = '%s') AND (%s));", user_hash.c_str(), GETSQL(anyNode).first.c_str());
         }
         catch (...)
         {

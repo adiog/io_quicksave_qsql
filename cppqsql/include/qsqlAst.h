@@ -13,13 +13,14 @@ using CTX = antlr4::ParserRuleContext;
 
 struct AstNode
 {
+    virtual ~AstNode() = default;
     virtual SQL buildQuery() = 0;
 };
 
 using AstNodePtr = antlrcpp::Any; //std::unique_ptr<AstNode>;
 
 
-#define GETSQL(node) static_cast<AstNode*>(node)->buildQuery()
+#define GETSQL(node) node.as<std::shared_ptr<AstNode>>()->buildQuery()
 #define FORMAT(...) Format::format(__VA_ARGS__)
 std::string get_hash(std::string str)
 {
@@ -65,7 +66,7 @@ struct AstStart : public UnaryAstNode
     {
         SQL sql = GETSQL(astNode);
         return {
-                FORMAT("SELECT * FROM meta WHERE %s;", sql.first.c_str()),
+                sql.first.c_str(),
                 sql.second
         };
     }
