@@ -9,7 +9,7 @@
 #include <qsql/qsqlBaseListener.h>
 #include <qsql/qsqlQuicksaveVisitor.h>
 #include <ANTLRInputStream.h>
-#include "tree/ParseTree.h"
+
 
 class QsqlException : public std::runtime_error
 {
@@ -30,7 +30,7 @@ struct QsqlQuery {
             auto tree = parser.start();
             auto qsqlVisitor = qsqlQuicksaveVisitor();
             auto anyNode = qsqlVisitor.visitStart(tree);
-            return FORMAT("SELECT * FROM meta WHERE ((user_hash = '%s') AND (%s)) ORDER BY created_at DESC;", user_hash.c_str(), GETSQL(anyNode).first.c_str());
+            return FORMAT("SELECT * FROM meta WHERE ((user_hash = '{}') AND ({})) ORDER BY created_at DESC;", user_hash.c_str(), GETSQL(anyNode).first.c_str());
         }
         catch (...)
         {

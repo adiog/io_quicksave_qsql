@@ -4,7 +4,7 @@
 
 #include <antlr4-runtime.h>
 #include <qsql/qsqlVisitor.h>
-#include <util/format.h>
+#include <folly/Format.h>
 
 
 using SQL = std::pair<std::string, std::unordered_map<std::string, std::string>>;
@@ -21,7 +21,7 @@ using AstNodePtr = antlrcpp::Any; //std::unique_ptr<AstNode>;
 
 
 #define GETSQL(node) node.as<std::shared_ptr<AstNode>>()->buildQuery()
-#define FORMAT(...) Format::format(__VA_ARGS__)
+#define FORMAT(...) (folly::format(__VA_ARGS__).str())
 std::string get_hash(std::string str)
 {
     return str;
@@ -105,7 +105,7 @@ struct AstOrPredicate : public BinaryAstNode
         SQL rhsSql = GETSQL(rhsAstNode);
         auto sqlParams = lhsSql.second;
         sqlParams.insert(rhsSql.second.begin(), rhsSql.second.end());
-        auto sqlQuery = FORMAT("(%s OR %s)", lhsSql.first.c_str(), rhsSql.first.c_str());
+        auto sqlQuery = FORMAT("({} OR {})", lhsSql.first.c_str(), rhsSql.first.c_str());
         return {sqlQuery, sqlParams};
     }
 };
@@ -121,7 +121,7 @@ struct AstAndPredicate : public BinaryAstNode
         SQL rhsSql = GETSQL(rhsAstNode);
         auto sqlParams = lhsSql.second;
         sqlParams.insert(rhsSql.second.begin(), rhsSql.second.end());
-        auto sqlQuery = FORMAT("(%s AND %s)", lhsSql.first.c_str(), rhsSql.first.c_str());
+        auto sqlQuery = FORMAT("({} AND {})", lhsSql.first.c_str(), rhsSql.first.c_str());
         return {sqlQuery, sqlParams};
     }
 
@@ -136,7 +136,7 @@ struct AstNotPredicate : public UnaryAstNode
     {
         SQL sql = GETSQL(astNode);
         return {
-                FORMAT("(NOT %s)", sql.first.c_str()),
+                FORMAT("(NOT {})", sql.first.c_str()),
                 sql.second
         };
     }
@@ -173,7 +173,7 @@ struct AstQsTagPredicate : public UnaryAstNode
     {
         SQL sql = GETSQL(astNode);
         return {
-                FORMAT("EXISTS (SELECT * FROM tag WHERE tag.meta_hash = meta.meta_hash AND tag.name = '%s')",
+                FORMAT("EXISTS (SELECT * FROM tag WHERE tag.meta_hash = meta.meta_hash AND tag.name = '{}')",
                        sql.first.c_str()),
                 sql.second
         };
@@ -202,7 +202,7 @@ struct AstQsStringEqualPredicate : public BinaryAstNode
         SQL rhsSql = GETSQL(rhsAstNode);
         auto sqlParams = lhsSql.second;
         sqlParams.insert(rhsSql.second.begin(), rhsSql.second.end());
-        auto sqlQuery = FORMAT("(%s = %s)", lhsSql.first.c_str(), rhsSql.first.c_str());
+        auto sqlQuery = FORMAT("({} = {})", lhsSql.first.c_str(), rhsSql.first.c_str());
         return {sqlQuery, sqlParams};
     }
 };
@@ -218,7 +218,7 @@ struct AstQsStringInPredicate : public BinaryAstNode
         SQL rhsSql = GETSQL(rhsAstNode);
         auto sqlParams = lhsSql.second;
         sqlParams.insert(rhsSql.second.begin(), rhsSql.second.end());
-        auto sqlQuery = FORMAT("(%s LIKE %s)", lhsSql.first.c_str(), rhsSql.first.c_str());
+        auto sqlQuery = FORMAT("({} LIKE {})", lhsSql.first.c_str(), rhsSql.first.c_str());
         return {sqlQuery, sqlParams};
     }
 };
@@ -234,7 +234,7 @@ class AstQsStringMatchPredicate : public BinaryAstNode
         SQL rhsSql = GETSQL(rhsAstNode);
         auto sqlParams = lhsSql.second;
         sqlParams.insert(rhsSql.second.begin(), rhsSql.second.end());
-        auto sqlQuery = FORMAT("(%s LIKE ('%%%s%%'))", lhsSql.first.c_str(), rhsSql.first.c_str());
+        auto sqlQuery = FORMAT("({} LIKE ('%%{}%%'))", lhsSql.first.c_str(), rhsSql.first.c_str());
         return {sqlQuery, sqlParams};
     }
 };
@@ -335,7 +335,7 @@ struct AstQsGetTagValue : public UnaryAstNode
     SQL buildQuery()
     {
         SQL sql = GETSQL(astNode);
-        return {FORMAT("(SELECT tag.value FROM tag WHERE tag.meta_hash = meta.meta_hash AND tag.name = '%s')", sql.first.c_str()), sql.second};
+        return {FORMAT("(SELECT tag.value FROM tag WHERE tag.meta_hash = meta.meta_hash AND tag.name = '{}')", sql.first.c_str()), sql.second};
     }
 };
 
@@ -356,6 +356,6 @@ struct AstQsIdentifier : public NullaryAstNode
         std::string hash = get_hash(id);
         std::unordered_map<std::string, std::string> m;
         m.insert({hash, id});
-        return {FORMAT("%s", hash.c_str()), m};
+        return {FORMAT("{}", hash.c_str()), m};
     }
 };
