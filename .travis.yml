@@ -9,4 +9,4 @@ addons:
       - ubuntu-toolchain-r-test
 
 script:
-    - ./cppqsql/bootstap.sh
+    - ./cppqsql/bootstrap.sh
