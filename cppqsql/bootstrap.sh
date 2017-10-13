@@ -4,8 +4,6 @@
 
 cd $(dirname $0)
 
-OUTPUT=$1
-
 function generate_parser()
 {
     cp ../grammar/qsql.g4 .
@@ -24,14 +22,7 @@ function fix_antlr()
     sed -e "s#antlr4-runtime.h#antlr4-runtime/&#" -i generated/qsql/qsqlLexer.h
 }
 
-function install()
-{
-    mkdir -p $OUTPUT/generated
-    rm -fr $OUTPUT/generated/qsql
-    mv generated/qsql $OUTPUT/generated/qsql
-    rm -fr generated
-}
 
 generate_parser
 fix_antlr
-install
+

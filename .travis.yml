@@ -1,0 +1,13 @@
+dist: trusty
+sudo: require
+
+language: java
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+
+script:
+    - ./cppqsql/bootstap.sh
