@@ -10,5 +10,5 @@ addons:
 
 script:
     - ./cppqsql/bootstrap.sh
-    - ./jsqsql/qsqs_javascript_env_setup.sh
+    - ./jsqsql/qsql_javascript_env_setup.sh
     - ./jsqsql/bootstrap.sh
