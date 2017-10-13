@@ -4,7 +4,6 @@
 
 cd $(dirname $0)
 
-OUTPUT=$1
 
 function generate_parser()
 {
@@ -38,17 +37,12 @@ function install()
     TEMPJS=`mktemp`
     browserify qsqlMain.js --outfile ${TEMPJS}
     #uglifyjs ${TEMPJS} --compress --mangle --output web_static/js/qsql.min.js
-    mv ${TEMPJS} $OUTPUT/js/generated/qsql.min.js
-}
-
-function cleanup()
-{
-    rm -fr generated
+    rm -fr generated/*
+    mv ${TEMPJS} generated/qsql.min.js
 }
 
 generate_parser
 post_generation
 generate_index
 install
-cleanup
 
