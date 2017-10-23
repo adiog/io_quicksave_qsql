@@ -17,7 +17,7 @@ class QsqlException : public std::runtime_error
 };
 
 struct QsqlQuery {
-    static std::string parseQsqlToSql(std::string user_hash, std::string qsqlQuery)
+    static std::string parseQsqlToSql(std::string user_hash, std::string qsqlQuery, int limit=10, int offset=0)
     {
         try
         {
@@ -30,7 +30,7 @@ struct QsqlQuery {
             auto tree = parser.start();
             auto qsqlVisitor = qsqlQuicksaveVisitor();
             auto anyNode = qsqlVisitor.visitStart(tree);
-            return FORMAT("SELECT * FROM meta WHERE ((user_hash = '{}') AND ({})) ORDER BY created_at DESC;", user_hash.c_str(), GETSQL(anyNode).first.c_str());
+            return FORMAT("SELECT * FROM meta WHERE ((user_hash = '{}') AND ({})) ORDER BY created_at DESC LIMIT {} OFFSET {};", user_hash.c_str(), GETSQL(anyNode).first.c_str(), limit, offset);
         }
         catch (...)
         {
