@@ -1,6 +1,7 @@
 // This file is a part of quicksave project.
 // Copyright (c) 2017 Aleksander Gajewski <adiog@quicksave.io>.
 
+#pragma once
 
 #include <antlr4-runtime.h>
 #include <qsql/qsqlVisitor.h>
