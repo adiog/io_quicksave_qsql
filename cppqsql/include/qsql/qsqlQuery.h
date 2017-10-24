@@ -1,23 +1,26 @@
 // This file is a part of quicksave project.
 // Copyright (c) 2017 Aleksander Gajewski <adiog@quicksave.io>.
 
-#ifndef QUICKSAVE_QSQLQUERY_H
-#define QUICKSAVE_QSQLQUERY_H
+#pragma once
 
-#include <qsql/qsqlAst.h>
-#include <qsql/qsqlLexer.h>
-#include <qsql/qsqlBaseListener.h>
-#include <qsql/qsqlQuicksaveVisitor.h>
 #include <ANTLRInputStream.h>
+#include <qsql/qsqlAst.h>
+#include <qsql/qsqlBaseListener.h>
+#include <qsql/qsqlLexer.h>
+#include <qsql/qsqlQuicksaveVisitor.h>
 
+
+namespace qsql {
 
 class QsqlException : public std::runtime_error
 {
     using std::runtime_error::runtime_error;
 };
 
-struct QsqlQuery {
-    static std::string parseQsqlToSql(std::string user_hash, std::string qsqlQuery, int limit=10, int offset=0)
+struct QsqlQuery
+{
+    static std::string
+    parseQsqlToSql(std::string user_hash, std::string qsqlQuery, int limit = 10, int offset = 0)
     {
         try
         {
@@ -30,7 +33,12 @@ struct QsqlQuery {
             auto tree = parser.start();
             auto qsqlVisitor = qsqlQuicksaveVisitor();
             auto anyNode = qsqlVisitor.visitStart(tree);
-            return FORMAT("SELECT * FROM meta WHERE ((user_hash = '{}') AND ({})) ORDER BY created_at DESC LIMIT {} OFFSET {};", user_hash.c_str(), GETSQL(anyNode).first.c_str(), limit, offset);
+            return FORMAT(
+                "SELECT * FROM meta WHERE ((user_hash = '{}') AND ({})) ORDER BY created_at DESC LIMIT {} OFFSET {};",
+                user_hash.c_str(),
+                GETSQL(anyNode).first.c_str(),
+                limit,
+                offset);
         }
         catch (...)
         {
@@ -38,5 +46,4 @@ struct QsqlQuery {
         }
     }
 };
-
-#endif
+}

@@ -4,25 +4,28 @@
 #pragma once
 
 #include <antlr4-runtime.h>
-#include <qsql/qsqlVisitor.h>
 #include <folly/Format.h>
+#include <qsql/qsqlVisitor.h>
 
+#define GETSQL(node) node.as<std::shared_ptr<::qsql::AstNode>>()->buildQuery()
+#define FORMAT(...) (folly::format(__VA_ARGS__).str())
+
+
+namespace qsql {
 
 using SQL = std::pair<std::string, std::unordered_map<std::string, std::string>>;
 using CTX = antlr4::ParserRuleContext;
 
-
 struct AstNode
 {
     virtual ~AstNode() = default;
+
     virtual SQL buildQuery() = 0;
 };
 
-using AstNodePtr = antlrcpp::Any; //std::unique_ptr<AstNode>;
+using AstNodePtr = antlrcpp::Any;
 
 
-#define GETSQL(node) node.as<std::shared_ptr<AstNode>>()->buildQuery()
-#define FORMAT(...) (folly::format(__VA_ARGS__).str())
 std::string get_hash(std::string str)
 {
     return str;
@@ -31,17 +34,21 @@ std::string get_hash(std::string str)
 
 struct NullaryAstNode : public AstNode
 {
-    NullaryAstNode(CTX * ctx) : ctx(*ctx)
+    NullaryAstNode(CTX *ctx)
+            : ctx(*ctx)
     {
     }
 
-    CTX& ctx;
+    CTX &ctx;
 };
 
 
 struct UnaryAstNode : public AstNode
 {
-    UnaryAstNode(AstNodePtr astNode) : astNode(std::move(astNode)) {}
+    UnaryAstNode(AstNodePtr astNode)
+            : astNode(std::move(astNode))
+    {
+    }
 
     AstNodePtr astNode;
 };
@@ -52,7 +59,8 @@ struct BinaryAstNode : public AstNode
     BinaryAstNode(AstNodePtr lhsAstNode, AstNodePtr rhsAstNode)
             : lhsAstNode(std::move(lhsAstNode))
             , rhsAstNode(std::move(rhsAstNode))
-    {}
+    {
+    }
 
     AstNodePtr lhsAstNode;
     AstNodePtr rhsAstNode;
@@ -67,9 +75,8 @@ struct AstStart : public UnaryAstNode
     {
         SQL sql = GETSQL(astNode);
         return {
-                sql.first.c_str(),
-                sql.second
-        };
+            sql.first.c_str(),
+            sql.second};
     }
 };
 
@@ -125,7 +132,6 @@ struct AstAndPredicate : public BinaryAstNode
         auto sqlQuery = FORMAT("({} AND {})", lhsSql.first.c_str(), rhsSql.first.c_str());
         return {sqlQuery, sqlParams};
     }
-
 };
 
 
@@ -137,9 +143,8 @@ struct AstNotPredicate : public UnaryAstNode
     {
         SQL sql = GETSQL(astNode);
         return {
-                FORMAT("(NOT {})", sql.first.c_str()),
-                sql.second
-        };
+            FORMAT("(NOT {})", sql.first.c_str()),
+            sql.second};
     }
 };
 
@@ -174,10 +179,9 @@ struct AstQsTagPredicate : public UnaryAstNode
     {
         SQL sql = GETSQL(astNode);
         return {
-                FORMAT("EXISTS (SELECT * FROM tag WHERE tag.meta_hash = meta.meta_hash AND tag.name = '{}')",
-                       sql.first.c_str()),
-                sql.second
-        };
+            FORMAT("EXISTS (SELECT * FROM tag WHERE tag.meta_hash = meta.meta_hash AND tag.name = '{}')",
+                   sql.first.c_str()),
+            sql.second};
     }
 };
 
@@ -336,7 +340,9 @@ struct AstQsGetTagValue : public UnaryAstNode
     SQL buildQuery()
     {
         SQL sql = GETSQL(astNode);
-        return {FORMAT("(SELECT tag.value FROM tag WHERE tag.meta_hash = meta.meta_hash AND tag.name = '{}')", sql.first.c_str()), sql.second};
+        return {FORMAT("(SELECT tag.value FROM tag WHERE tag.meta_hash = meta.meta_hash AND tag.name = '{}')",
+                       sql.first.c_str()),
+                sql.second};
     }
 };
 
@@ -348,7 +354,7 @@ struct AstQsIdentifier : public NullaryAstNode
     std::string get_identifier()
     {
         std::string s = ctx.getText();
-        return {&s[1], s.size()-2};
+        return {&s[1], s.size() - 2};
     }
 
     SQL buildQuery()
@@ -360,3 +366,4 @@ struct AstQsIdentifier : public NullaryAstNode
         return {FORMAT("{}", hash.c_str()), m};
     }
 };
+}
