@@ -1,5 +1,5 @@
 
-// Generated from qsql.g4 by ANTLR 4.6
+// Generated from qsql.g4 by ANTLR 4.7
 
 #pragma once
 
@@ -7,6 +7,7 @@
 #include "antlr4-runtime.h"
 
 
+namespace qsql {
 
 
 class  qsqlParser : public antlr4::Parser {
@@ -458,3 +459,4 @@ private:
   static Initializer _init;
 };
 
+}  // namespace qsql

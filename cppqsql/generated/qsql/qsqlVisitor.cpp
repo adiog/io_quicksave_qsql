@@ -1,7 +1,9 @@
 
-// Generated from qsql.g4 by ANTLR 4.6
+// Generated from qsql.g4 by ANTLR 4.7
 
 
 #include "qsqlVisitor.h"
 
+
+using namespace qsql;
 

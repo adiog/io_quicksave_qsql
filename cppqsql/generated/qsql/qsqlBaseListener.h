@@ -1,5 +1,5 @@
 
-// Generated from qsql.g4 by ANTLR 4.6
+// Generated from qsql.g4 by ANTLR 4.7
 
 #pragma once
 
@@ -7,6 +7,8 @@
 #include "antlr4-runtime.h"
 #include "qsqlListener.h"
 
+
+namespace qsql {
 
 /**
  * This class provides an empty implementation of qsqlListener,
@@ -93,3 +95,4 @@ public:
 
 };
 
+}  // namespace qsql

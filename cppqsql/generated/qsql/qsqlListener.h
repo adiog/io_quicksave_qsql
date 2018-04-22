@@ -1,5 +1,5 @@
 
-// Generated from qsql.g4 by ANTLR 4.6
+// Generated from qsql.g4 by ANTLR 4.7
 
 #pragma once
 
@@ -7,6 +7,8 @@
 #include "antlr4-runtime.h"
 #include "qsqlParser.h"
 
+
+namespace qsql {
 
 /**
  * This interface defines an abstract listener for a parse tree produced by qsqlParser.
@@ -86,3 +88,4 @@ public:
 
 };
 
+}  // namespace qsql

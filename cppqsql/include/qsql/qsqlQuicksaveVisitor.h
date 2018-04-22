@@ -1,13 +1,13 @@
-
-// Generated from qsql/qsql.g4 by ANTLR 4.6
+// This file is a part of quicksave project.
+// Copyright (c) 2017 Aleksander Gajewski <adiog@quicksave.io>.
 
 #pragma once
-
 
 #include "antlr4-runtime.h"
 #include "qsql/qsqlVisitor.h"
 
 
+namespace qsql {
 /**
  * This class provides an empty implementation of qsqlVisitor, which can be
  * extended to create a visitor which only needs to handle a subset of the available methods.
@@ -75,7 +75,8 @@ public:
             ctx->children[0]->accept(this)));
     }
 
-    virtual antlrcpp::Any visitQs_string_equal_predicate(qsqlParser::Qs_string_equal_predicateContext *ctx) override
+    virtual antlrcpp::Any
+    visitQs_string_equal_predicate(qsqlParser::Qs_string_equal_predicateContext *ctx) override
     {
         return std::shared_ptr<AstNode>(std::make_shared<AstQsStringEqualPredicate>(
             ctx->children[0]->accept(this),
@@ -89,14 +90,16 @@ public:
             ctx->children[2]->accept(this)));
     }
 
-    virtual antlrcpp::Any visitQs_string_match_predicate(qsqlParser::Qs_string_match_predicateContext *ctx) override
+    virtual antlrcpp::Any
+    visitQs_string_match_predicate(qsqlParser::Qs_string_match_predicateContext *ctx) override
     {
         return std::shared_ptr<AstNode>(std::make_shared<AstQsStringMatchPredicate>(
             ctx->children[0]->accept(this),
             ctx->children[2]->accept(this)));
     }
 
-    virtual antlrcpp::Any visitQs_string_with_parenthesis(qsqlParser::Qs_string_with_parenthesisContext *ctx) override
+    virtual antlrcpp::Any
+    visitQs_string_with_parenthesis(qsqlParser::Qs_string_with_parenthesisContext *ctx) override
     {
         return std::shared_ptr<AstNode>(std::make_shared<AstQsStringWithParenthesis>(
             ctx->children[1]->accept(this)));
@@ -111,43 +114,37 @@ public:
     virtual antlrcpp::Any visitQs_get_item_name(qsqlParser::Qs_get_item_nameContext *ctx) override
     {
         return std::shared_ptr<AstNode>(std::make_shared<AstQsGetItemName>(
-            ctx
-        ));
+            ctx));
     }
 
     virtual antlrcpp::Any visitQs_get_item_text(qsqlParser::Qs_get_item_textContext *ctx) override
     {
         return std::shared_ptr<AstNode>(std::make_shared<AstQsGetItemText>(
-            ctx
-        ));
+            ctx));
     }
 
     virtual antlrcpp::Any visitQs_get_item_type(qsqlParser::Qs_get_item_typeContext *ctx) override
     {
         return std::shared_ptr<AstNode>(std::make_shared<AstQsGetItemType>(
-            ctx
-        ));
+            ctx));
     }
 
     virtual antlrcpp::Any visitQs_get_item_author(qsqlParser::Qs_get_item_authorContext *ctx) override
     {
         return std::shared_ptr<AstNode>(std::make_shared<AstQsGetItemAuthor>(
-            ctx
-        ));
+            ctx));
     }
 
     virtual antlrcpp::Any visitQs_get_item_source_title(qsqlParser::Qs_get_item_source_titleContext *ctx) override
     {
         return std::shared_ptr<AstNode>(std::make_shared<AstQsGetItemSourceTitle>(
-            ctx
-        ));
+            ctx));
     }
 
     virtual antlrcpp::Any visitQs_get_item_source_url(qsqlParser::Qs_get_item_source_urlContext *ctx) override
     {
         return std::shared_ptr<AstNode>(std::make_shared<AstQsGetItemSourceUrl>(
-            ctx
-        ));
+            ctx));
     }
 
     virtual antlrcpp::Any visitQs_get_tag_value(qsqlParser::Qs_get_tag_valueContext *ctx) override
@@ -163,3 +160,4 @@ public:
             ));
     }
 };
+}

@@ -1,5 +1,5 @@
 
-// Generated from qsql.g4 by ANTLR 4.6
+// Generated from qsql.g4 by ANTLR 4.7
 
 #pragma once
 
@@ -7,14 +7,10 @@
 #include "antlr4-runtime/antlr4-runtime.h"
 
 
+namespace qsql {
 
 
 class  qsqlLexer : public antlr4::Lexer {
-public:
-std::vector<std::string> vs;
-virtual const std::vector<std::string>& getChannelNames() const override {
-       return vs;
-    };
 public:
   enum {
     T__0 = 1, T__1 = 2, IDENTIFIER = 3, EQUAL = 4, K_IN = 5, K_MATCH = 6, 
@@ -29,6 +25,7 @@ public:
   virtual std::string getGrammarFileName() const override;
   virtual const std::vector<std::string>& getRuleNames() const override;
 
+  virtual const std::vector<std::string>& getChannelNames() const override;
   virtual const std::vector<std::string>& getModeNames() const override;
   virtual const std::vector<std::string>& getTokenNames() const override; // deprecated, use vocabulary instead
   virtual antlr4::dfa::Vocabulary& getVocabulary() const override;
@@ -41,6 +38,7 @@ private:
   static antlr4::atn::PredictionContextCache _sharedContextCache;
   static std::vector<std::string> _ruleNames;
   static std::vector<std::string> _tokenNames;
+  static std::vector<std::string> _channelNames;
   static std::vector<std::string> _modeNames;
 
   static std::vector<std::string> _literalNames;
@@ -60,3 +58,4 @@ private:
   static Initializer _init;
 };
 
+}  // namespace qsql
